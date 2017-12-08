@@ -13,8 +13,11 @@ Tested on linux arch (2017), should work correctly on osx and windows.
 > Punch a hole throught the firewall to this machine.
 >
 > optional arguments:
+>
 >  -h, --help            show this help message and exit
+>
 >  -action {open,close}
+>
 >  -ports PORTS          What ports to be mapped? format is LOCAL:REMOTE (Ex. 8000:80)
 >
 
