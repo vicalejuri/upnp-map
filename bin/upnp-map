@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+"""
+This tool is do whatever license, and its only feature is to open ports via UPNP.
+Tested on linux arch (2017), should work correctly on osx and windows.
+    __
+   / /              
+  / /                
+ / /  
+/_/ bî̫͔n fc ⚑.
+"""
+
+
+import logging
+import sys, time
+import argparse
+
+from upnp_map.utils import dotdict
+from upnp_map.upnp import UPNP
+
+defaults = {
+    "action": "open",
+    "srcPort": 8000,
+    "dstPort": 8000,
+}
+
+logging.basicConfig(level=logging.INFO)
+
+parser = argparse.ArgumentParser(prog='upnp-map',description='Punch a hole throught the firewall to this machine.')
+
+parser.add_argument('-action',choices=['open','close'], default='open')
+parser.add_argument('-ports',default='8000:8000', type=str, help='What ports to be mapped? format is LOCAL:REMOTE  (Ex 8000:80 ) ')
+
+def parse_port(ports_string):
+    try:
+        return [int(p) for p in ports_string.split(':')]
+    except:
+        logger.info('Invalid ports %s' % (ports_string))
+        sys.exit(-1)
+
+class App(object):
+    def __init__(self, sttgs):
+        self.settings = sttgs
+        self.logger = logging
+        self.upnp = UPNP(self)
+     
+    def open(self):
+        self.upnp.addPortForward( self.settings.srcPort, self.settings.dstPort )
+
+    def close(self):
+        self.upnp.removePortForward( self.settings.dstPort )
+
+if __name__ == '__main__':
+    args = parser.parse_args()
+
+    ports = parse_port( args.ports )
+    settings = dotdict( defaults )
+    settings.action = args.action
+    settings.srcPort = ports[0]
+    settings.dstPort = ports[1]
+
+    # Invoke action
+    app = App(settings)
+    action = getattr(app, settings.action)
+    action()
+
+    try:
+        while True:
+            time.sleep(1)
+
+    except KeyboardInterrupt:
+        app.close()
