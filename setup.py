@@ -7,7 +7,7 @@ setup(
    author='bbfc',
    author_email='barrabin.fc@gmail.com',
    url='https://github.com/barrabinfc/upnp-map',
-     download_url = 'https://github.com/barrabinfc/upnp-map/archive/0.1.tar.gz', # I'll explain this in a second
+     download_url = 'https://github.com/barrabinfc/upnp-ma/archive/0.1.tar.gz', # I'll explain this in a second
    packages=['upnp_map'],  
    install_requires=['miniupnpc'], 
    scripts=[
